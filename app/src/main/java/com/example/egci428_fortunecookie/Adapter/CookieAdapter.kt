@@ -27,7 +27,6 @@ class CookieAdapter (private val cookieList: ArrayList<Cookie>,private val conte
         holder.txtDate.text = cookieList[position].date
         holder.txtImage.setImageResource(context.resources.getIdentifier("opened_cookie","drawable",context.packageName))
     }
-
     override fun getItemCount(): Int {
         return cookieList.size
     }

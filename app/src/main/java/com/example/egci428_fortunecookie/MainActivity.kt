@@ -19,6 +19,7 @@ import com.example.egci428_fortunecookie.Adapter.CookieAdapter
 import com.example.egci428_fortunecookie.Model.Cookie
 import com.google.android.material.snackbar.Snackbar
 
+
 class MainActivity : AppCompatActivity() {
     lateinit var recyclerView: RecyclerView
     var cookieList : ArrayList<Cookie> = ArrayList()

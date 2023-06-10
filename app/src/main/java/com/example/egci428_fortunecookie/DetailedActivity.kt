@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -56,13 +57,13 @@ class DetailedActivity : AppCompatActivity() {
                             println("$name: $value")
                         }
                         val body = response.body!!.string()
+
                         if (body == null) return@use
                         val jsonObject = JSONTokener(body).nextValue() as JSONObject
                         message = jsonObject.getString("message")
                         status = jsonObject.getString("status")
-
+                        progress++
                     }
-                    progress++
                 }
             })
         }
@@ -72,15 +73,23 @@ class DetailedActivity : AppCompatActivity() {
             if(progress == 0) {//Before click first time
                 Toast.makeText(this,"Waiting", Toast.LENGTH_SHORT).show()
                 fetchJson()
-                while(progress<1){}
-                textView4.text = "Result: " + message
-                onScreenText.text = message
-                date = "Date: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))
-                textView5.text = date
-                wishBtn.text = "Save"
-                imageView.setImageResource(resources.getIdentifier("opened_cookie","drawable",packageName))
-                progress++
-            }else if(progress == 2){//Before click second time
+                /*var loop = 0
+                while(progress<1){
+                    loop++
+                    if(loop>(9999*9999*9999*9999*9999*9999*9999*9999)){
+                        break
+                    }
+                }*/
+                Handler().postDelayed({
+                    textView4.text = "Result: " + message
+                    onScreenText.text = message
+                    date = "Date: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))
+                    textView5.text = date
+                    wishBtn.text = "Save"
+                    imageView.setImageResource(resources.getIdentifier("opened_cookie","drawable",packageName))
+                    progress++
+                }, 1000)
+            }else if(progress > 0){//Before click second time
                 var intent = Intent(this,MainActivity::class.java)
                 intent.putExtra("msg", message)
                 intent.putExtra("status", status)
