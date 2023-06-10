@@ -1,14 +1,17 @@
 package com.example.egci428_fortunecookie
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.internal.synchronized
 import okhttp3.*
 import org.json.JSONObject
 import org.json.JSONTokener
@@ -57,12 +60,19 @@ class DetailedActivity : AppCompatActivity() {
                         val jsonObject = JSONTokener(body).nextValue() as JSONObject
                         message = jsonObject.getString("message")
                         status = jsonObject.getString("status")
-            }}})
+
+                    }
+                    progress++
+                }
+            })
         }
-        fetchJson()//fetch json before user press button
+        //fetchJson()//fetch json before user press button
 
         wishBtn.setOnClickListener{
-            if(progress == 0 && message != "null") {//Before click first time
+            if(progress == 0) {//Before click first time
+                Toast.makeText(this,"Waiting", Toast.LENGTH_SHORT).show()
+                fetchJson()
+                while(progress<1){}
                 textView4.text = "Result: " + message
                 onScreenText.text = message
                 date = "Date: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))
@@ -70,17 +80,19 @@ class DetailedActivity : AppCompatActivity() {
                 wishBtn.text = "Save"
                 imageView.setImageResource(resources.getIdentifier("opened_cookie","drawable",packageName))
                 progress++
-            }else if(progress == 1){//Before click second time
+            }else if(progress == 2){//Before click second time
                 var intent = Intent(this,MainActivity::class.java)
                 intent.putExtra("msg", message)
                 intent.putExtra("status", status)
                 intent.putExtra("date", date)
-                startActivity(intent)
+                setResult(RESULT_OK,intent)
                 overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
                 finish()
             }
         }
         button3.setOnClickListener {
+            var intent = Intent(this,MainActivity::class.java)
+            setResult(Activity.RESULT_CANCELED,intent)
             overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right)
             finish()
         }

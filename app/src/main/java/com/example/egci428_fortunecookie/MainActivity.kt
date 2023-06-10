@@ -1,5 +1,7 @@
 package com.example.egci428_fortunecookie
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -18,37 +20,19 @@ import com.example.egci428_fortunecookie.Model.Cookie
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
-
     lateinit var recyclerView: RecyclerView
     var cookieList : ArrayList<Cookie> = ArrayList()
     var cookieAdapter: CookieAdapter = CookieAdapter(cookieList, this)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val button = findViewById<Button>(R.id.button)
         val toolBar = findViewById<Toolbar>(R.id.toolbar)
         recyclerView = findViewById(R.id.recycleView)
-        val linearLayoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.HORIZONTAL, false)
+        val linearLayoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = linearLayoutManager
-
-        //cookieList = ArrayList()
-        //cookieAdapter = CookieAdapter(cookieList, this)
         recyclerView.adapter = cookieAdapter
-        println("=====check for bundle")
-        val bundle = intent.extras
-        if(bundle != null){
-            println("=====Bundle found")
-            var msg = bundle!!.getString("msg").toString()
-            var status = bundle!!.getString("status").toString()
-            var date = bundle!!.getString("date").toString()
-            cookieList.add(Cookie(msg,status,date))
-            cookieAdapter.notifyDataSetChanged()
-            println("=====Bundle added successful ("+msg+")")
-        }
         println("=====cookie="+cookieAdapter.getItemCount())
-
-
 
 
         //https://www.geeksforgeeks.org/android-swipe-to-delete-and-undo-in-recyclerview-with-kotlin/
@@ -60,7 +44,6 @@ class MainActivity : AppCompatActivity() {
             ): Boolean {
                 return false
             }
-
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 println("=====swipe")
                 val deletedCourse: Cookie = cookieList.get(viewHolder.adapterPosition)
@@ -78,10 +61,26 @@ class MainActivity : AppCompatActivity() {
         }).attachToRecyclerView(recyclerView)
 
         button.setOnClickListener{
+
             var intent = Intent(this,DetailedActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent, 0)
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
         }
 
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        println("=====ACT DONE")
+        if(resultCode == Activity.RESULT_OK){
+            println("=====ACT OK")
+            var msg = data?.getStringExtra("msg").toString()
+            var status = data?.getStringExtra("status").toString()
+            var date = data?.getStringExtra("date").toString()
+            cookieList.add(Cookie(msg,status,date))
+            cookieAdapter.notifyDataSetChanged()
+            println("=====ACT ADDED ("+msg+")")
+
+        }
     }
 }
