@@ -41,8 +41,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="2000"
-                android:textSize="12sp"
+                android:textSize="10sp"
                 android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/txtOwner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="unnamed"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/txtSchool"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="N/A"
+                android:textSize="8sp" />
 
         </LinearLayout>
 

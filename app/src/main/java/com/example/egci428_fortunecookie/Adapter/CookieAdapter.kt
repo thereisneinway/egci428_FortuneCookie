@@ -25,6 +25,8 @@ class CookieAdapter (private val cookieList: ArrayList<Cookie>,private val conte
             holder.txtName.setTextColor(Color.parseColor("#ffaa00"))
         }
         holder.txtDate.text = cookieList[position].date
+        holder.txtOwner.text = cookieList[position].owner
+        holder.txtSchool.text = cookieList[position].school
         holder.txtImage.setImageResource(context.resources.getIdentifier("opened_cookie","drawable",context.packageName))
     }
     override fun getItemCount(): Int {
@@ -34,5 +36,7 @@ class CookieAdapter (private val cookieList: ArrayList<Cookie>,private val conte
         var txtName = itemView.findViewById<TextView>(R.id.txtName)
         var txtDate = itemView.findViewById<TextView>(R.id.txtDate)
         var txtImage = itemView.findViewById<ImageView>(R.id.txtImage)
+        var txtOwner = itemView.findViewById<TextView>(R.id.txtOwner)
+        var txtSchool = itemView.findViewById<TextView>(R.id.txtSchool)
     }
 }
